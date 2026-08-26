@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPN Esport — Équipe Fortnite compétitive</title>
+<meta name="description" content="SPN Esport, équipe Fortnite compétitive. Actualités, cups et réseaux.">
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Barlow:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-950:#0b0d12;
+    --ink-900:#12151c;
+    --ink-800:#181d28;
+    --navy-panel:#131826;
+    --sky-500:#59baff;
+    --sky-300:#8fd6ff;
+    --sky-700:#3b769a;
+    --ice-100:#f2f9ff;
+    --slate-400:#7c8ca8;
+    --slate-600:#4c5875;
+    --line: rgba(89,186,255,0.16);
+    --display: "Orbitron", sans-serif;
+    --body: "Barlow", sans-serif;
+    --mono: "Space Mono", monospace;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--ink-950);
+    color:var(--ice-100);
+    font-family:var(--body);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  img{ max-width:100%; display:block; }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--sky-500);
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:2px;
+    background:var(--sky-500);
+    display:inline-block;
+  }
+  h1,h2,h3{ font-family:var(--display); font-weight:800; letter-spacing:0.01em; }
+
+  /* ---------- Background texture (faceted shield motif) ---------- */
+  .facet-field{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(700px 500px at 82% -8%, rgba(89,186,255,0.14), transparent 60%),
+      radial-gradient(600px 500px at -10% 40%, rgba(59,118,154,0.14), transparent 60%);
+  }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:18px 0;
+    transition:background .35s ease, border-color .35s ease, padding .35s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{
+    background:rgba(11,13,18,0.86);
+    backdrop-filter:blur(10px);
+    border-color:var(--line);
+    padding:12px 0;
+  }
+  nav{ display:flex; align-items:center; justify-content:space-between; }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand img{ width:38px; height:38px; border-radius:9px; }
+  .brand span{ font-family:var(--display); font-weight:800; font-size:19px; letter-spacing:0.06em; }
+  .navlinks{ display:flex; gap:34px; }
+  .navlinks a{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:0.12em; text-transform:uppercase;
+    color:var(--slate-400); transition:color .2s ease; position:relative; padding-bottom:4px;
+  }
+  .navlinks a::after{
+    content:""; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--sky-500);
+    transition:width .25s ease;
+  }
+  .navlinks a:hover{ color:var(--ice-100); }
+  .navlinks a:hover::after{ width:100%; }
+  .nav-cta{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    border:1px solid var(--sky-700); color:var(--sky-300); padding:9px 16px; border-radius:3px;
+    transition:all .2s ease;
+  }
+  .nav-cta:hover{ background:var(--sky-500); color:var(--ink-950); border-color:var(--sky-500); }
+  .burger{ display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none; padding:6px; }
+  .burger span{ width:24px; height:2px; background:var(--ice-100); display:block; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; min-height:100vh; display:flex; align-items:center;
+    padding-top:90px; overflow:hidden;
+  }
+  .shield-glow{
+    position:absolute; top:50%; right:6%; transform:translateY(-50%);
+    width:min(640px, 60vw); opacity:0.9; z-index:0;
+    animation:pulseGlow 5s ease-in-out infinite;
+  }
+  .hero-logo{
+    position:absolute; top:50%; right:11%; transform:translateY(-50%);
+    width:min(330px, 38vw); border-radius:24%; z-index:1;
+    filter:drop-shadow(0 0 34px rgba(89,186,255,0.5));
+    animation:pulseGlow 5s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{
+    0%,100%{ filter:drop-shadow(0 0 34px rgba(89,186,255,0.35)); }
+    50%{ filter:drop-shadow(0 0 58px rgba(89,186,255,0.6)); }
+  }
+  .hero-content{ position:relative; z-index:2; max-width:640px; }
+  .hero .eyebrow{ margin-bottom:22px; }
+  .hero h1{
+    font-size:clamp(64px, 11vw, 132px);
+    line-height:0.92;
+    background:linear-gradient(180deg, var(--ice-100) 20%, var(--sky-300) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero .tagline{
+    font-family:var(--display); font-weight:700; font-size:clamp(16px,2.2vw,22px);
+    color:var(--sky-300); margin-top:14px; letter-spacing:0.02em;
+  }
+  .hero p.desc{
+    color:var(--slate-400); margin-top:20px; font-size:16px; max-width:460px;
+  }
+  .hero-ctas{ display:flex; gap:16px; margin-top:36px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.1em; text-transform:uppercase;
+    padding:14px 26px; border-radius:3px; transition:all .2s ease; display:inline-block;
+  }
+  .btn-primary{ background:var(--sky-500); color:var(--ink-950); font-weight:700; }
+  .btn-primary:hover{ background:var(--sky-300); transform:translateY(-2px); }
+  .btn-ghost{ border:1px solid var(--line); color:var(--ice-100); }
+  .btn-ghost:hover{ border-color:var(--sky-500); color:var(--sky-300); }
+
+  .scroll-cue{
+    position:absolute; bottom:36px; left:28px; z-index:2;
+    font-family:var(--mono); font-size:11px; letter-spacing:0.2em; color:var(--slate-600);
+    writing-mode:vertical-rl; display:flex; align-items:center; gap:10px;
+  }
+  .scroll-cue::after{ content:""; width:1px; height:40px; background:var(--slate-600); }
+
+  /* ---------- Sections shared ---------- */
+  section{ position:relative; z-index:1; padding:120px 0; }
+  .section-head{ margin-bottom:56px; }
+  .section-head h2{ font-size:clamp(30px,4vw,46px); margin-top:14px; }
+  .divider{
+    height:1px; width:100%;
+    background:linear-gradient(90deg, var(--sky-700), transparent 70%);
+  }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ---------- Roster ---------- */
+  .roster-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:20px;
+  }
+  .player-card{
+    background:var(--navy-panel); border:1px solid var(--line); border-radius:8px;
+    padding:26px; position:relative; overflow:hidden; transition:transform .25s ease, border-color .25s ease;
+  }
+  .player-card:hover{ transform:translateY(-6px); border-color:var(--sky-500); }
+  .player-card .tag{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--sky-500); border:1px solid var(--sky-700); display:inline-block;
+    padding:3px 9px; border-radius:2px; margin-bottom:16px;
+  }
+  .player-card .avatar{
+    width:56px; height:56px; border-radius:50%;
+    background:linear-gradient(140deg, var(--sky-700), var(--ink-800));
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--display); font-weight:800; font-size:18px; color:var(--sky-300);
+    margin-bottom:16px;
+  }
+  .player-card h3{ font-size:20px; letter-spacing:0.03em; }
+  .player-card .role{ color:var(--slate-400); font-size:13.5px; margin-top:3px; }
+  .player-card .stat{
+    font-family:var(--mono); font-size:12.5px; color:var(--sky-300); margin-top:16px;
+    padding-top:16px; border-top:1px solid var(--line);
+  }
+  .player-card.empty-slot{ min-height:184px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border-style:dashed; }
+  .empty-slot .avatar{ opacity:.45; }
+  .empty-slot p{ color:var(--slate-400); font-size:13.5px; }
+
+  /* ---------- Listes de contenu ---------- */
+  .scoreboard{ border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .score-row{
+    display:grid; grid-template-columns:110px 1fr 140px 90px;
+    gap:16px; padding:18px 24px; align-items:center;
+    border-bottom:1px solid var(--line); font-size:14.5px;
+  }
+  .score-row:last-child{ border-bottom:none; }
+  .score-row.head{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--slate-400); background:rgba(89,186,255,0.04);
+  }
+  .score-row .date{ font-family:var(--mono); color:var(--slate-400); font-size:13px; }
+  .score-row .tournoi{ font-weight:600; }
+  .score-row .result{ font-family:var(--mono); color:var(--sky-300); }
+  .score-row .rank{
+    font-family:var(--mono); font-weight:700; color:var(--sky-500);
+    justify-self:start;
+  }
+  .feed-empty{
+    border:1px dashed var(--slate-600); border-radius:8px; padding:28px;
+    color:var(--slate-400); font-family:var(--mono); font-size:13px;
+  }
+  .cup-card{ background:var(--navy-panel); border:1px solid var(--line); border-radius:8px; padding:20px 24px; margin-bottom:14px; }
+  .cup-card .date{ font-family:var(--mono); color:var(--slate-400); font-size:13px; }
+  .cup-card .tournoi{ font-weight:600; font-size:17px; margin:4px 0; }
+  .cup-card .result{ font-family:var(--mono); color:var(--sky-300); font-size:13.5px; }
+  .cup-comments{ margin-top:16px; padding-top:14px; border-top:1px dashed var(--line); }
+  .cup-comments-title{ font-family:var(--mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--sky-500); margin:0 0 10px; }
+  .cup-comment{ background:rgba(89,186,255,0.05); border-radius:6px; padding:10px 12px; margin-bottom:8px; }
+  .cup-comment-author{ font-family:var(--mono); font-size:11px; color:var(--sky-300); font-weight:700; }
+  .cup-comment-text{ margin:4px 0 0; font-size:14px; color:var(--slate-100,#eef4fb); }
+  .cup-comment-delete{ background:none; border:0; color:#ff9d9d; font-family:var(--mono); font-size:11px; margin-top:6px; padding:0; cursor:pointer; }
+  .cup-comment-form{ display:flex; flex-direction:column; gap:8px; margin-top:10px; }
+  .cup-comment-form textarea{ width:100%; min-height:56px; resize:vertical; background:rgba(255,255,255,0.03); border:1px solid var(--line); border-radius:6px; padding:10px; color:inherit; font-size:14px; font-family:inherit; }
+  .cup-comment-form button{ align-self:flex-start; border:0; border-radius:6px; background:var(--sky-500); color:#04121f; padding:9px 16px; font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; }
+  .cup-comment-login{ color:var(--slate-400); font-family:var(--mono); font-size:12.5px; }
+  .cup-comment-login a{ color:var(--sky-300); }
+  .news-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
+  .news-card{ background:var(--navy-panel); border:1px solid var(--line); border-radius:8px; padding:24px; }
+  .news-card h3{ font-size:19px; margin:10px 0; }
+  .news-card time{ color:var(--sky-500); font-family:var(--mono); font-size:12px; }
+  .news-card p{ color:var(--slate-400); }
+  @media (max-width:640px){
+    .score-row{ grid-template-columns:1fr; gap:6px; padding:16px; }
+    .score-row.head{ display:none; }
+  }
+
+  /* ---------- Sponsors ---------- */
+  .sponsor-row{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:18px;
+  }
+  .sponsor-slot{
+    border:1px dashed var(--slate-600); border-radius:8px; height:96px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:12px; letter-spacing:0.1em; color:var(--slate-600);
+    text-transform:uppercase; transition:border-color .2s ease, color .2s ease;
+  }
+  .sponsor-slot:hover{ border-color:var(--sky-500); color:var(--sky-300); }
+
+  /* ---------- Social / Contact ---------- */
+  .social-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:18px;
+  }
+  .social-card{
+    background:var(--navy-panel); border:1px solid var(--line); border-radius:8px;
+    padding:24px; display:flex; align-items:center; gap:16px;
+    transition:border-color .2s ease, transform .2s ease;
+  }
+  .social-card:hover{ border-color:var(--sky-500); transform:translateY(-4px); }
+  .social-card .icon{
+    width:42px; height:42px; border-radius:50%; background:rgba(89,186,255,0.1);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  }
+  .social-card .icon svg{ width:20px; height:20px; stroke:var(--sky-300); fill:none; stroke-width:1.8; }
+  .social-card .name{ font-weight:700; font-size:15px; }
+  .social-card .handle{ font-family:var(--mono); font-size:12px; color:var(--slate-400); }
+
+  .contact-line{
+    margin-top:44px; display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:20px; padding-top:30px; border-top:1px solid var(--line);
+  }
+  .contact-line a{ color:var(--sky-300); font-family:var(--mono); font-size:14px; }
+  .contact-line a:hover{ color:var(--ice-100); }
+
+  /* ---------- Footer ---------- */
+  footer{
+    padding:40px 0; border-top:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;
+  }
+  footer .brand span{ font-size:15px; }
+  footer .foot-note{ color:var(--slate-600); font-size:12.5px; font-family:var(--mono); }
+
+  @media (max-width:860px){
+    .navlinks, .nav-cta{ display:none; }
+    .burger{ display:flex; }
+    header.open .navlinks{
+      display:flex; position:fixed; top:64px; left:0; right:0; background:var(--ink-900);
+      flex-direction:column; padding:24px 28px; gap:20px; border-bottom:1px solid var(--line);
+    }
+    .shield-glow{ opacity:0.35; }
+    .hero-logo{ opacity:0.6; right:6%; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="facet-field"></div>
+
+<header id="siteHeader">
+  <div class="wrap">
+    <nav>
+      <a href="#top" class="brand">
+        <img src="assets/logo.png" alt="Logo SPN Esport">
+        <span>SPN</span>
+      </a>
+      <ul class="navlinks">
+        <li><a href="#roster">Équipe</a></li>
+        <li><a href="#casts">Casts</a></li>
+        <li><a href="#cups">Cups</a></li>
+        <li><a href="#actualites">Actualités</a></li>
+        <li><a href="#reseaux">Réseaux</a></li>
+        <li><a href="compte.html">Mon compte</a></li>
+      </ul>
+      <a href="compte.html" class="nav-cta">Mon compte</a>
+      <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <svg class="shield-glow" viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#59baff" stop-opacity="0.5"/>
+          <stop offset="100%" stop-color="#3b769a" stop-opacity="0.05"/>
+        </linearGradient>
+        <linearGradient id="shieldGrad2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8fd6ff" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#59baff" stop-opacity="0.1"/>
+        </linearGradient>
+      </defs>
+      <polygon points="200,10 380,90 380,230 200,450 20,230 20,90" fill="url(#shieldGrad)" stroke="#59baff" stroke-opacity="0.4" stroke-width="1"/>
+      <polygon points="200,10 200,450 20,230 20,90" fill="url(#shieldGrad2)" opacity="0.4"/>
+      <polygon points="200,60 330,120 330,220 200,380 200,60" fill="none" stroke="#8fd6ff" stroke-opacity="0.5" stroke-width="1"/>
+      <polygon points="140,110 260,150 220,270 150,320 110,220" fill="#0b0d12" opacity="0.5"/>
+    </svg>
+    <img class="hero-logo" src="assets/logo.png" alt="Logo SPN Esport">
+
+    <div class="wrap">
+      <div class="hero-content">
+        <p class="eyebrow reveal in">Équipe esport Fortnite</p>
+        <h1>SPN</h1>
+        <p class="tagline">On ne joue pas la zone. On la possède.</p>
+        <p class="desc">Escouade compétitive tournée vers la scène Fortnite : builds propres, rotations agressives, et une seule idée en tête à chaque partie — le Victory Royale.</p>
+        <div class="hero-ctas">
+          <a href="#actualites" class="btn btn-primary">Voir les actualités</a>
+          <a href="#reseaux" class="btn btn-ghost">Nous suivre</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-cue">SCROLL</div>
+  </section>
+
+  <!-- ROSTER -->
+  <section id="roster">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">L'équipe</p>
+        <h2>Les joueurs de la team</h2>
+      </div>
+
+      <div class="roster-grid" id="playersList"><div class="player-card empty-slot reveal"><div class="avatar">?</div><h3>Emplacement réservé</h3><p>Joueur à annoncer</p></div></div>
+    </div>
+  </section>
+
+  <!-- CASTS -->
+  <section id="casts">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Diffusions</p>
+        <h2>Planning de cast</h2>
+      </div>
+      <div class="scoreboard reveal" id="castsList"><p class="feed-empty">Aucun cast programmé pour le moment.</p></div>
+    </div>
+  </section>
+
+  <!-- CUPS -->
+  <section id="cups">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Compétitions</p>
+        <h2>Cups à venir</h2>
+      </div>
+      <div class="scoreboard reveal" id="cupsList"><p class="feed-empty">Aucune cup publiée pour le moment.</p></div>
+    </div>
+  </section>
+
+  <!-- ACTUALITES -->
+  <section id="actualites">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">À la une</p>
+        <h2>Actualités</h2>
+      </div>
+      <div class="news-grid reveal" id="newsList"><p class="feed-empty">Aucune actualité publiée pour le moment.</p></div>
+    </div>
+  </section>
+
+  <!-- RESEAUX / CONTACT -->
+  <section id="reseaux">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Réseaux</p>
+        <h2>Suivre l'équipe</h2>
+      </div>
+
+      <div class="social-grid reveal">
+        <a class="social-card" href="https://www.youtube.com/@spn_esport_fn" target="_blank" rel="noopener">
+          <span class="icon"><svg viewBox="0 0 24 24"><polygon points="9,7 18,12 9,17"/></svg></span>
+          <span>
+            <span class="name" style="display:block;">YouTube</span>
+            <span class="handle">@spn_esport_fn</span>
+          </span>
+        </a>
+        <a class="social-card" href="https://discord.com/invite/833bGdVNjj" target="_blank" rel="noopener">
+          <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M9 12h6M12 9v6"/></svg></span>
+          <span>
+            <span class="name" style="display:block;">Discord</span>
+            <span class="handle">Rejoindre le Discord</span>
+          </span>
+        </a>
+        <a class="social-card" href="https://www.tiktok.com/@spnesport2026?_r=1&_t=ZN-98WKhyOozaw" target="_blank" rel="noopener">
+          <span class="icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3.5"/></svg></span>
+          <span>
+            <span class="name" style="display:block;">TikTok</span>
+            <span class="handle">@spnesport2026</span>
+          </span>
+        </a>
+        <a class="social-card" href="https://www.fortnite.com/@fliks_eu/9292-5913-4825" target="_blank" rel="noopener">
+          <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 17l4-8 4 4 4-7 4 11"/><path d="M4 20h16"/></svg></span>
+          <span>
+            <span class="name" style="display:block;">Map Fortnite</span>
+            <span class="handle">9292-5913-4825</span>
+          </span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; width:100%;">
+    <a href="#top" class="brand">
+      <img src="assets/logo.png" alt="Logo SPN Esport" style="width:28px;height:28px;border-radius:7px;">
+      <span>SPN ESPORT</span>
+    </a>
+    <p class="foot-note">© 2026 SPN Esport — Site fan-made, non affilié à Epic Games.</p>
+  </div>
+</footer>
+
+<script>
+  // Nav background on scroll
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  // Mobile menu toggle
+  const burger = document.getElementById('burgerBtn');
+  burger.addEventListener('click', () => header.classList.toggle('open'));
+  document.querySelectorAll('.navlinks a').forEach(a => {
+    a.addEventListener('click', () => header.classList.remove('open'));
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getFirestore, collection, doc, getDoc, addDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+  import { firebaseConfig } from './firebase/firebase-config.js';
+
+  const safe = value => String(value || '').replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' }[char]));
+  const formatDate = value => value ? new Date(value).toLocaleString('fr-FR', { dateStyle:'medium', timeStyle:'short' }) : 'Date à confirmer';
+  if (Object.values(firebaseConfig).every(Boolean)) {
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    let cups = [], currentUser = null, isAdminHome = false, commentsByCup = {}, commentUnsub = {};
+
+    function renderCupComments(cupId) {
+      const comments = commentsByCup[cupId] || [];
+      const list = comments.map(cm => `<div class="cup-comment"><span class="cup-comment-author">${safe(cm.authorName)}</span><p class="cup-comment-text">${safe(cm.text)}</p>${currentUser && (currentUser.uid === cm.authorUid || isAdminHome) ? `<button class="cup-comment-delete" data-comment-delete="${cupId}|${cm.id}">Supprimer</button>` : ''}</div>`).join('');
+      const form = currentUser
+        ? `<form class="cup-comment-form" data-cup-id="${cupId}"><textarea maxlength="300" placeholder="Ton commentaire…" required></textarea><button type="submit">Commenter</button></form>`
+        : `<p class="cup-comment-login">Connecte-toi sur <a href="compte.html">Mon compte</a> pour commenter.</p>`;
+      return `<div class="cup-comments"><p class="cup-comments-title">Commentaires${comments.length ? ` (${comments.length})` : ''}</p>${list || '<p class="feed-empty">Aucun commentaire pour le moment.</p>'}${form}</div>`;
+    }
+    function renderCupsList() {
+      const el = document.getElementById('cupsList');
+      el.innerHTML = cups.length ? cups.map(cup => `<article class="cup-card"><span class="date">${formatDate(cup.date)}</span><div class="tournoi">${safe(cup.title)}</div><div class="result">${safe(cup.description || 'Informations à venir')}${cup.participants?.length ? `<br><small>Joueurs : ${safe(cup.participants.map(player => player.displayName).join(', '))}</small>` : ''}</div>${renderCupComments(cup.id)}</article>`).join('') : '<p class="feed-empty">Aucune cup publiée pour le moment.</p>';
+    }
+    function watchCupComments(cupId) {
+      if (commentUnsub[cupId]) return;
+      commentUnsub[cupId] = onSnapshot(query(collection(db, 'cups', cupId, 'comments'), orderBy('createdAt', 'asc')), snapshot => {
+        commentsByCup[cupId] = snapshot.docs.map(d => ({ id:d.id, ...d.data() }));
+        renderCupsList();
+      });
+    }
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+      isAdminHome = false;
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          isAdminHome = userDoc.data()?.role === 'admin';
+        } catch(e) {}
+      }
+      renderCupsList();
+    });
+    document.getElementById('cupsList').addEventListener('submit', async e => {
+      if (!e.target.classList.contains('cup-comment-form')) return;
+      e.preventDefault();
+      const cupId = e.target.dataset.cupId;
+      const textarea = e.target.querySelector('textarea');
+      const text = textarea.value.trim();
+      if (!text || !currentUser) return;
+      try {
+        await addDoc(collection(db, 'cups', cupId, 'comments'), { text, authorUid: currentUser.uid, authorName: currentUser.displayName || 'Membre', createdAt: serverTimestamp() });
+        textarea.value = '';
+      } catch(err) {}
+    });
+    document.getElementById('cupsList').addEventListener('click', async e => {
+      const val = e.target.dataset.commentDelete;
+      if (!val) return;
+      const [cupId, commentId] = val.split('|');
+      if (confirm('Supprimer ce commentaire ?')) {
+        try { await deleteDoc(doc(db, 'cups', cupId, 'comments', commentId)); } catch(err) {}
+      }
+    });
+    onSnapshot(query(collection(db, 'cups'), orderBy('date', 'asc')), snapshot => {
+      cups = snapshot.docs.map(item => ({ id:item.id, ...item.data() }));
+      const ids = new Set(cups.map(c => c.id));
+      Object.keys(commentUnsub).forEach(id => { if (!ids.has(id)) { commentUnsub[id](); delete commentUnsub[id]; delete commentsByCup[id]; } });
+      cups.forEach(c => watchCupComments(c.id));
+      renderCupsList();
+    });
+    onSnapshot(collection(db, 'players'), snapshot => {
+      const players = snapshot.docs.map(item => ({ id:item.id, ...item.data() })).sort((a,b) => String(a.displayName || '').localeCompare(String(b.displayName || ''), 'fr'));
+      document.getElementById('playersList').innerHTML = players.length ? players.map(player => `<article class="player-card"><span class="tag">Joueur</span><div class="avatar">${safe((player.displayName || '?').slice(0,2).toUpperCase())}</div><h3>${safe(player.displayName)}</h3><p class="role">${safe(player.speciality || 'Membre de la team')}</p>${player.bio ? `<p class="stat">${safe(player.bio)}</p>` : ''}</article>`).join('') : '<div class="player-card empty-slot"><div class="avatar">?</div><h3>Emplacement réservé</h3><p>Joueur à annoncer</p></div>';
+    });
+    onSnapshot(collection(db, 'casts'), snapshot => {
+      const casts = snapshot.docs.map(item => ({ id:item.id, ...item.data() })).sort((a,b) => new Date(a.date || 0) - new Date(b.date || 0));
+      document.getElementById('castsList').innerHTML = casts.length ? casts.map(cast => `<div class="score-row"><span class="date">${formatDate(cast.date)}</span><span class="tournoi">${safe(cast.title)}</span><span class="result">${safe(cast.description || 'Informations à venir')}</span><span class="rank">CAST</span></div>`).join('') : '<p class="feed-empty">Aucun cast programmé pour le moment.</p>';
+    });
+    onSnapshot(collection(db, 'news'), snapshot => {
+      const news = snapshot.docs.map(item => ({ id:item.id, ...item.data() })).sort((a,b) => new Date(b.date || 0) - new Date(a.date || 0));
+      document.getElementById('newsList').innerHTML = news.length ? news.map(item => `<article class="news-card"><time>${formatDate(item.date)}</time><h3>${safe(item.title)}</h3><p>${safe(item.content)}</p></article>`).join('') : '<p class="feed-empty">Aucune actualité publiée pour le moment.</p>';
+    });
+  }
+</script>
+
+</body>
+</html>
