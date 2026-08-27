@@ -198,6 +198,29 @@
   .player-card.empty-slot{ min-height:184px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; border-style:dashed; }
   .empty-slot .avatar{ opacity:.45; }
   .empty-slot p{ color:var(--slate-400); font-size:13.5px; }
+  .player-card.has-bio{ cursor:pointer; }
+  .player-card .hint{ font-family:var(--mono); font-size:11px; color:var(--sky-500); margin-top:14px; letter-spacing:.04em; }
+  .player-modal{
+    position:fixed; inset:0; background:rgba(4,8,16,0.78); backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center; z-index:100; padding:24px;
+  }
+  .player-modal.hidden{ display:none; }
+  .player-modal-content{
+    position:relative; background:var(--navy-panel); border:1px solid var(--sky-700);
+    border-radius:10px; padding:36px 32px; max-width:420px; width:100%; text-align:center;
+  }
+  .player-modal-close{
+    position:absolute; top:14px; right:16px; background:none; border:0; color:var(--slate-400);
+    font-size:22px; line-height:1; cursor:pointer;
+  }
+  .player-modal-close:hover{ color:var(--sky-300); }
+  .player-modal-content .avatar{ margin:0 auto 16px; }
+  .player-modal-content h3{ font-size:22px; }
+  .player-modal-content .role{ color:var(--slate-400); font-size:13.5px; margin-top:4px; }
+  .player-modal-content .stat{
+    font-family:var(--mono); font-size:13px; color:var(--sky-300); margin-top:20px;
+    padding-top:20px; border-top:1px solid var(--line); text-align:left; white-space:pre-wrap;
+  }
 
   /* ---------- Listes de contenu ---------- */
   .scoreboard{ border:1px solid var(--line); border-radius:8px; overflow:hidden; }
@@ -326,9 +349,7 @@
         <li><a href="#cups">Cups</a></li>
         <li><a href="#actualites">Actualités</a></li>
         <li><a href="#reseaux">Réseaux</a></li>
-        <li><a href="compte.html">Mon compte</a></li>
       </ul>
-      <a href="compte.html" class="nav-cta">Mon compte</a>
       <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">
         <span></span><span></span><span></span>
       </button>
@@ -486,7 +507,19 @@
   document.querySelectorAll('.navlinks a').forEach(a => {
     a.addEventListener('click', () => header.classList.remove('open'));
   });
+</script>
 
+<div class="player-modal hidden" id="playerModal">
+  <div class="player-modal-content">
+    <button class="player-modal-close" id="closePlayerModal" aria-label="Fermer">&times;</button>
+    <div class="avatar" id="modalAvatar"></div>
+    <h3 id="modalName"></h3>
+    <p class="role" id="modalRole"></p>
+    <p class="stat" id="modalBio"></p>
+  </div>
+</div>
+
+<script>
   // Scroll reveal
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
@@ -564,10 +597,26 @@
       cups.forEach(c => watchCupComments(c.id));
       renderCupsList();
     });
+    let rosterPlayers = [];
     onSnapshot(collection(db, 'players'), snapshot => {
-      const players = snapshot.docs.map(item => ({ id:item.id, ...item.data() })).sort((a,b) => String(a.displayName || '').localeCompare(String(b.displayName || ''), 'fr'));
-      document.getElementById('playersList').innerHTML = players.length ? players.map(player => `<article class="player-card"><span class="tag">Joueur</span><div class="avatar">${safe((player.displayName || '?').slice(0,2).toUpperCase())}</div><h3>${safe(player.displayName)}</h3><p class="role">${safe(player.speciality || 'Membre de la team')}</p>${player.bio ? `<p class="stat">${safe(player.bio)}</p>` : ''}</article>`).join('') : '<div class="player-card empty-slot"><div class="avatar">?</div><h3>Emplacement réservé</h3><p>Joueur à annoncer</p></div>';
+      rosterPlayers = snapshot.docs.map(item => ({ id:item.id, ...item.data() })).sort((a,b) => String(a.displayName || '').localeCompare(String(b.displayName || ''), 'fr'));
+      document.getElementById('playersList').innerHTML = rosterPlayers.length ? rosterPlayers.map(player => `<article class="player-card${player.bio ? ' has-bio' : ''}" data-player-id="${player.id}"><span class="tag">Joueur</span><div class="avatar">${safe((player.displayName || '?').slice(0,2).toUpperCase())}</div><h3>${safe(player.displayName)}</h3><p class="role">${safe(player.speciality || 'Membre de la team')}</p>${player.bio ? `<p class="hint">Voir la bio →</p>` : ''}</article>`).join('') : '<div class="player-card empty-slot"><div class="avatar">?</div><h3>Emplacement réservé</h3><p>Joueur à annoncer</p></div>';
     });
+    document.getElementById('playersList').addEventListener('click', e => {
+      const card = e.target.closest('.player-card[data-player-id]');
+      if (!card) return;
+      const player = rosterPlayers.find(p => p.id === card.dataset.playerId);
+      if (!player || !player.bio) return;
+      document.getElementById('modalAvatar').textContent = (player.displayName || '?').slice(0,2).toUpperCase();
+      document.getElementById('modalName').textContent = player.displayName || '';
+      document.getElementById('modalRole').textContent = player.speciality || 'Membre de la team';
+      document.getElementById('modalBio').textContent = player.bio;
+      document.getElementById('playerModal').classList.remove('hidden');
+    });
+    function closePlayerModal() { document.getElementById('playerModal').classList.add('hidden'); }
+    document.getElementById('closePlayerModal').addEventListener('click', closePlayerModal);
+    document.getElementById('playerModal').addEventListener('click', e => { if (e.target.id === 'playerModal') closePlayerModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePlayerModal(); });
     onSnapshot(collection(db, 'casts'), snapshot => {
       const casts = snapshot.docs.map(item => ({ id:item.id, ...item.data() })).sort((a,b) => new Date(a.date || 0) - new Date(b.date || 0));
       document.getElementById('castsList').innerHTML = casts.length ? casts.map(cast => `<div class="score-row"><span class="date">${formatDate(cast.date)}</span><span class="tournoi">${safe(cast.title)}</span><span class="result">${safe(cast.description || 'Informations à venir')}</span><span class="rank">CAST</span></div>`).join('') : '<p class="feed-empty">Aucun cast programmé pour le moment.</p>';
